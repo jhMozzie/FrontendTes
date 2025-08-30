@@ -5,6 +5,7 @@ import championshipRoutes from '@/modules/championships/routes';
 import dashboardRoutes from '@/modules/dashboards/routes';
 import userRoutes from '@/modules/users/routes';
 import academyRoutes from '@/modules/academies/routes';
+import studentRoutes from '@/modules/students/routes';
 
 // 2. Une todas las rutas en un solo array
 const routes = [
@@ -12,6 +13,7 @@ const routes = [
   ...championshipRoutes,
   ...userRoutes,
   ...academyRoutes,
+  ...studentRoutes,
   // ... aquí añadirías las rutas de futuros módulos (ej: ...studentRoutes)
 ];
 
