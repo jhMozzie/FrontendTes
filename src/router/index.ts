@@ -1,23 +1,43 @@
 import { createRouter, createWebHistory } from 'vue-router';
+import type { RouteRecordRaw } from 'vue-router';
 
-// 1. Importa las rutas desde cada módulo
+// --- LAYOUTS ---
+import MainLayout from '@/layouts/MainLayout.vue';
+
+// --- IMPORTAMOS LOS ARRAYS DE RUTAS DE CADA MÓDULO ---
 import championshipRoutes from '@/modules/championships/routes';
-import dashboardRoutes from '@/modules/dashboards/routes';
-import userRoutes from '@/modules/users/routes';
 import academyRoutes from '@/modules/academies/routes';
 import studentRoutes from '@/modules/students/routes';
+import userRoutes from '@/modules/users/routes';
 
-// 2. Une todas las rutas en un solo array
-const routes = [
-  ...dashboardRoutes,
-  ...championshipRoutes,
-  ...userRoutes,
+// --- LÓGICA DE ENSAMBLAJE DE RUTAS ---
+
+// 1. Rutas que van dentro del MainLayout (todas las vistas de lista)
+const mainLayoutChildren: RouteRecordRaw[] = [
+  ...championshipRoutes.filter(route => !route.path.startsWith('/')),
   ...academyRoutes,
   ...studentRoutes,
-  // ... aquí añadirías las rutas de futuros módulos (ej: ...studentRoutes)
+  ...userRoutes,
 ];
 
-// 3. Crea y exporta el router
+// 2. Rutas de nivel superior que usan su propio layout (como la de detalle)
+const detailLayoutRoutes: RouteRecordRaw[] = [
+  ...championshipRoutes.filter(route => route.path.startsWith('/')),
+  // En el futuro, aquí podrías agregar otras rutas de detalle (ej. /students/:id)
+];
+
+// --- CONFIGURACIÓN FINAL DE RUTAS ---
+const routes: RouteRecordRaw[] = [
+  {
+    path: '/',
+    component: MainLayout,
+    children: mainLayoutChildren,
+    redirect: '/championships', // Redirige la raíz a la lista de campeonatos por defecto
+  },
+  // Añadimos las rutas de detalle como rutas de nivel superior, independientes del MainLayout
+  ...detailLayoutRoutes,
+];
+
 const router = createRouter({
   history: createWebHistory(),
   routes,

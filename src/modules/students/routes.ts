@@ -1,11 +1,12 @@
-// src/modules/students/routes.ts
+import type { RouteRecordRaw } from 'vue-router';
+import StudentsView from './views/StudentsView.vue'; // Asumimos que este es el nombre de la vista
 
-import StudentsView from './views/StudentsView.vue';
-
-export default [
+const studentRoutes: RouteRecordRaw[] = [
   {
-    path: '/students',
-    name: 'Students',
+    path: 'students',
+    name: 'StudentsList',
     component: StudentsView,
-  },
+  }
 ];
+
+export default studentRoutes;
