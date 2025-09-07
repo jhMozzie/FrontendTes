@@ -1,6 +1,6 @@
 import axios from 'axios';
 // PASO 1: Importa la interfaz desde el archivo central de tipos del módulo
-import type { Championship } from './types';
+import type { Championship } from '../types';
 
 const API_BASE_URL = 'http://localhost:3000/api';
 
@@ -32,4 +32,9 @@ export const updateChampionship = async (id: number, championshipData: Partial<O
 
 export const deleteChampionship = async (id: number): Promise<void> => {
   await apiClient.delete(`/championships/${id}`);
+};
+
+export const getChampionshipById = async (id: number): Promise<Championship> => {
+  const response = await apiClient.get(`/championships/${id}`);
+  return response.data;
 };

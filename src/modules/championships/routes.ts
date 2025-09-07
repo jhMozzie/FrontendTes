@@ -1,7 +1,7 @@
 import type { RouteRecordRaw } from 'vue-router';
 
-// LAYOUTS
-import ChampionshipDetailLayout from '@/layouts/ChampionshipDetailLayout.vue';
+// 1. IMPORTAMOS EL LAYOUT GENÉRICO
+import DetailLayout from '@/layouts/DetailLayout.vue'; 
 
 // VISTAS
 import ChampionshipsListView from './views/ChampionshipsListView.vue';
@@ -10,33 +10,41 @@ import ChampionshipCategories from './views/detail/ChampionshipCategories.vue';
 import ChampionshipBrackets from './views/detail/ChampionshipBrackets.vue';
 
 const championshipRoutes: RouteRecordRaw[] = [
-  // 1. Ruta para la lista principal (ya la tienes)
   {
     path: 'championships',
     name: 'ChampionshipsList',
     component: ChampionshipsListView,
   },
-  // 2. Ruta padre para la vista de detalle anidada
   {
     path: '/championships/:id',
-    component: ChampionshipDetailLayout, // Usa el layout con el sidebar secundario
+    // 2. USAMOS EL LAYOUT GENÉRICO
+    component: DetailLayout,
+    // 3. LE PASAMOS LAS PROPS CON LA CONFIGURACIÓN PARA ESTE MÓDULO
+    props: route => ({
+      title: 'Gestionar Campeonato',
+      backRoute: { name: 'ChampionshipsList' },
+      navLinks: [
+        { name: 'participants', to: { name: 'ChampionshipDetailParticipants', params: { id: route.params.id } }, label: 'Participantes', icon: '👥' },
+        { name: 'categories', to: { name: 'ChampionshipDetailCategories', params: { id: route.params.id } }, label: 'Categorías', icon: '🏆' },
+        { name: 'brackets', to: { name: 'ChampionshipDetailBrackets', params: { id: route.params.id } }, label: 'Llaves', icon: '📊' },
+      ]
+    }),
     children: [
       {
-        path: 'participants', // URL -> /championships/:id/participants
+        path: 'participants',
         name: 'ChampionshipDetailParticipants',
         component: ChampionshipParticipants,
       },
       {
-        path: 'categories', // URL -> /championships/:id/categories
+        path: 'categories',
         name: 'ChampionshipDetailCategories',
         component: ChampionshipCategories,
       },
       {
-        path: 'brackets', // URL -> /championships/:id/brackets
+        path: 'brackets',
         name: 'ChampionshipDetailBrackets',
         component: ChampionshipBrackets,
       },
-      // Redirección por defecto: al entrar a /championships/:id, te manda a 'participants'
       {
         path: '',
         redirect: { name: 'ChampionshipDetailParticipants' },

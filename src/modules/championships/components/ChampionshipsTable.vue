@@ -18,20 +18,30 @@
             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-100">{{ champ.name }}</td>
             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{{ new Date(champ.startDate).toLocaleDateString() }}</td>
             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{{ champ.location }}</td>
-            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
+            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
               
-              <!-- CAMBIO CLAVE: El botón del lápiz ahora es un router-link que navega -->
-              <router-link
-                :to="{ name: 'ChampionshipDetailParticipants', params: { id: champ.id } }"
-                class="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300 p-1 inline-block" 
-                title="Gestionar Campeonato"
-              >
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.5L15.232 5.232z"></path></svg>
-              </router-link>
+              <!-- CAMBIO CLAVE: Envolvemos los iconos en un contenedor Flexbox -->
+              <div class="flex items-center justify-end space-x-2">
+                <!-- Botón para Editar (abre el modal) -->
+                <button @click="$emit('editChampionship', champ)" class="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 p-1" title="Editar">
+                  <PencilSquareIcon class="w-5 h-5" />
+                </button>
+                
+                <!-- Botón para Eliminar (abre modal de confirmación) -->
+                <button @click="$emit('deleteChampionship', champ)" class="text-red-600 hover:text-red-900 dark:text-red-400 p-1" title="Eliminar">
+                  <TrashIcon class="w-5 h-5" />
+                </button>
+
+                <!-- El enlace de navegación ahora es una lupa -->
+                <router-link
+                  :to="{ name: 'ChampionshipDetailParticipants', params: { id: champ.id } }"
+                  class="text-green-600 hover:text-green-900 dark:text-green-400 p-1" 
+                  title="Gestionar Campeonato"
+                >
+                  <EyeIcon class="w-5 h-5" />
+                </router-link>
+              </div>
               
-              <button @click="$emit('deleteChampionship', champ)" class="text-red-600 hover:text-red-900 dark:text-red-400 p-1" title="Eliminar">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-              </button>
             </td>
           </tr>
         </tbody>
@@ -42,12 +52,12 @@
 
 <script setup lang="ts">
 import type { Championship } from '../types';
+import { EyeIcon, PencilSquareIcon, TrashIcon } from '@heroicons/vue/24/outline';
 
 defineProps<{
   championships: Championship[];
 }>();
 
-// El evento 'editChampionship' ya no es necesario para la navegación, pero lo dejamos por si lo usas para otra cosa
 defineEmits(['editChampionship', 'deleteChampionship']);
 </script>
 
