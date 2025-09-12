@@ -1,23 +1,11 @@
 import axios from 'axios';
-// Importa los tipos necesarios desde el archivo central del módulo
 import type { ChampionshipCategory, CreateChampionshipCategoryPayload } from '../types';
 
 const API_BASE_URL = 'http://localhost:3000/api';
-
-const apiClient = axios.create({
-  baseURL: API_BASE_URL,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
-
-
-// --- Funciones exportadas para el CRUD de Categorías de un Campeonato ---
+const apiClient = axios.create({ baseURL: API_BASE_URL, headers: { 'Content-Type': 'application/json' } });
 
 /**
  * Obtiene todas las categorías de un campeonato específico.
- * Llama a la ruta: GET /championships/:championshipId/categories
- * @param championshipId El ID del campeonato.
  */
 export const getCategoriesByChampionship = async (championshipId: number): Promise<ChampionshipCategory[]> => {
   const response = await apiClient.get(`/championships/${championshipId}/categories`);
@@ -25,12 +13,10 @@ export const getCategoriesByChampionship = async (championshipId: number): Promi
 };
 
 /**
- * Añade una nueva categoría a un campeonato existente.
- * Llama a la ruta: POST /championships/:championshipId/categories
- * @param championshipId El ID del campeonato.
- * @param categoryData Los datos de la nueva categoría.
+ * Crea una nueva categoría para un campeonato existente.
  */
-export const addCategoryToChampionship = async (
+// CAMBIO: Renombrado de 'addCategoryToChampionship'
+export const createChampionshipCategory = async (
   championshipId: number, 
   categoryData: CreateChampionshipCategoryPayload
 ): Promise<ChampionshipCategory> => {
@@ -39,11 +25,21 @@ export const addCategoryToChampionship = async (
 };
 
 /**
- * Elimina una categoría específica de un campeonato.
- * Llama a la ruta: DELETE /championship-categories/:categoryId
- * @param categoryId El ID de la categoría a eliminar.
+ * Actualiza una categoría existente.
  */
-export const removeCategoryFromChampionship = async (categoryId: number): Promise<void> => {
+export const updateChampionshipCategory = async (
+  categoryId: number,
+  categoryData: Partial<CreateChampionshipCategoryPayload>
+): Promise<ChampionshipCategory> => {
+  const response = await apiClient.put(`/championship-categories/${categoryId}`, categoryData);
+  return response.data;
+};
+
+/**
+ * Elimina una categoría específica por su ID.
+ */
+// CAMBIO: Renombrado de 'removeCategoryFromChampionship'
+export const deleteChampionshipCategory = async (categoryId: number): Promise<void> => {
   await apiClient.delete(`/championship-categories/${categoryId}`);
 };
 

@@ -1,13 +1,13 @@
 import type { Academy } from "../academies/types";
 
-// Interfaz para un Estudiante (la información mínima que necesitamos del participante)
+// Interfaz para un Estudiante
 export interface Student {
   id: number;
   firstname: string;
   lastname: string;
 }
 
-// Interfaz para un Participante, que contiene la información del Estudiante
+// Interfaz para un Participante
 export interface Participant {
   id: number;
   student: Student;
@@ -16,10 +16,11 @@ export interface Participant {
 // Interfaz para una Categoría de Campeonato (cuando la recibimos de la API)
 export interface ChampionshipCategory {
   id: number;
-  code: string;
+  code: string | null;
   modality: string;
   ageRange: string;
-  ageCategory: string; // <-- Campo añadido para consistencia
+  ageCategory: string;
+
   gender: string;
   skillLevel: string;
   participants: Participant[];
@@ -27,15 +28,16 @@ export interface ChampionshipCategory {
 
 // Interfaz para el payload de CREACIÓN de una nueva categoría
 export interface CreateChampionshipCategoryPayload {
-  modality: 'KATA' | 'KUMITE';
+  modality: string;
   ageRange: string;
   ageCategory: string;
-  gender: 'FEMENINO' | 'MASCULINO' | 'MIXTO';
+  gender: string;
   skillLevel: string;
-  code: string; // <-- Campo añadido para que el admin pueda definir el código
+  // --- CORRECCIÓN AQUÍ: Hacemos el tipo consistente para aceptar null ---
+  code?: string | null; // Permite string, null, o undefined
 }
 
-// Interfaz principal para un Campeonato (CORREGIDA)
+// Interfaz principal para un Campeonato
 export interface Championship {
   id: number;
   name: string;
@@ -43,7 +45,6 @@ export interface Championship {
   location: string;
   academyId: number;
   academy?: Academy;
-  // CORRECCIÓN: Usamos el tipo correcto 'ChampionshipCategory'
   categories?: ChampionshipCategory[]; 
 }
 

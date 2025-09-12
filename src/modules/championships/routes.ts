@@ -1,13 +1,11 @@
 import type { RouteRecordRaw } from 'vue-router';
-
-// 1. IMPORTAMOS EL LAYOUT GENÉRICO
 import DetailLayout from '@/layouts/DetailLayout.vue'; 
 
-// VISTAS
+// VISTAS - CORREGIR LOS NOMBRES (agregar la "s")
 import ChampionshipsListView from './views/ChampionshipsListView.vue';
-import ChampionshipParticipants from './views/detail/ChampionshipParticipants.vue';
-import ChampionshipCategories from './views/detail/ChampionshipCategories.vue';
-import ChampionshipBrackets from './views/detail/ChampionshipBrackets.vue';
+import ChampionshipsParticipants from './views/detail/ChampionshipsParticipants.vue';
+import ChampionshipsCategories from './views/detail/ChampionshipsCategories.vue';
+import ChampionshipsBrackets from './views/detail/ChampionshipsBrackets.vue';
 
 const championshipRoutes: RouteRecordRaw[] = [
   {
@@ -17,9 +15,7 @@ const championshipRoutes: RouteRecordRaw[] = [
   },
   {
     path: '/championships/:id',
-    // 2. USAMOS EL LAYOUT GENÉRICO
     component: DetailLayout,
-    // 3. LE PASAMOS LAS PROPS CON LA CONFIGURACIÓN PARA ESTE MÓDULO
     props: route => ({
       title: 'Gestionar Campeonato',
       backRoute: { name: 'ChampionshipsList' },
@@ -33,17 +29,17 @@ const championshipRoutes: RouteRecordRaw[] = [
       {
         path: 'participants',
         name: 'ChampionshipDetailParticipants',
-        component: ChampionshipParticipants,
+        component: ChampionshipsParticipants, // ← Corregido
       },
       {
         path: 'categories',
         name: 'ChampionshipDetailCategories',
-        component: ChampionshipCategories,
+        component: ChampionshipsCategories, // ← Corregido
       },
       {
         path: 'brackets',
         name: 'ChampionshipDetailBrackets',
-        component: ChampionshipBrackets,
+        component: ChampionshipsBrackets, // ← Corregido
       },
       {
         path: '',
@@ -54,4 +50,3 @@ const championshipRoutes: RouteRecordRaw[] = [
 ];
 
 export default championshipRoutes;
-
