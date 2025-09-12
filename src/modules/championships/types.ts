@@ -37,6 +37,14 @@ export interface CreateChampionshipCategoryPayload {
   code?: string | null; // Permite string, null, o undefined
 }
 
+
+// --- NUEVA INTERFAZ ---
+// Define los datos necesarios para inscribir un nuevo participante.
+export interface CreateParticipantPayload {
+  studentId: number;
+  championshipCategoryId: number;
+}
+
 // Interfaz principal para un Campeonato
 export interface Championship {
   id: number;
@@ -47,4 +55,3 @@ export interface Championship {
   academy?: Academy;
   categories?: ChampionshipCategory[]; 
 }
-
