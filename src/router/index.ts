@@ -1,46 +1,63 @@
-import { createRouter, createWebHistory } from 'vue-router';
-import type { RouteRecordRaw } from 'vue-router';
+// src/router/index.ts
+import { createRouter, createWebHistory } from "vue-router";
+import type { RouteRecordRaw } from "vue-router";
+import { useAuthStore } from "@/modules/auth/store/authStore"; // 👈 importa tu store
 
 // --- LAYOUTS ---
-import MainLayout from '@/layouts/MainLayout.vue';
+import MainLayout from "@/layouts/MainLayout.vue";
 
-// --- IMPORTAMOS LOS ARRAYS DE RUTAS DE CADA MÓDULO ---
-import championshipRoutes from '@/modules/championships/routes';
-import academyRoutes from '@/modules/academies/routes';
-import studentRoutes from '@/modules/students/routes';
-import userRoutes from '@/modules/users/routes';
+// --- RUTAS ---
+import championshipRoutes from "@/modules/championships/routes";
+import academyRoutes from "@/modules/academies/routes";
+import studentRoutes from "@/modules/students/routes";
+import userRoutes from "@/modules/users/routes";
+import authRoutes from "@/modules/auth/routes";
 
-// --- LÓGICA DE ENSAMBLAJE DE RUTAS ---
-
-// 1. Rutas que van dentro del MainLayout (todas las vistas de lista)
+// --- Hijos del MainLayout ---
 const mainLayoutChildren: RouteRecordRaw[] = [
-  ...championshipRoutes.filter(route => !route.path.startsWith('/')),
+  ...championshipRoutes.filter((route) => !route.path.startsWith("/")),
   ...academyRoutes,
   ...studentRoutes,
   ...userRoutes,
 ];
 
-// 2. Rutas de nivel superior que usan su propio layout (como la de detalle)
+// --- Rutas de detalle ---
 const detailLayoutRoutes: RouteRecordRaw[] = [
-  ...championshipRoutes.filter(route => route.path.startsWith('/')),
-  // En el futuro, aquí podrías agregar otras rutas de detalle (ej. /students/:id)
+  ...championshipRoutes.filter((route) => route.path.startsWith("/")),
 ];
 
-// --- CONFIGURACIÓN FINAL DE RUTAS ---
+// --- Configuración de rutas ---
 const routes: RouteRecordRaw[] = [
+  ...authRoutes, // públicas: login
   {
-    path: '/',
+    path: "/",
     component: MainLayout,
     children: mainLayoutChildren,
-    redirect: '/championships', // Redirige la raíz a la lista de campeonatos por defecto
+    redirect: "/championships",
   },
-  // Añadimos las rutas de detalle como rutas de nivel superior, independientes del MainLayout
   ...detailLayoutRoutes,
 ];
 
 const router = createRouter({
   history: createWebHistory(),
   routes,
+});
+
+// --- Guard global de autenticación ---
+router.beforeEach((to, from, next) => {
+  const auth = useAuthStore();
+
+  // Si no es pública y no hay usuario → login
+  if (!to.meta.public && !auth.isAuthenticated) { // 👈 sin ()
+    return next("/login");
+  }
+
+  // Si ya está autenticado y va al login → dashboard o championships
+  if (to.path === "/login" && auth.isAuthenticated) { // 👈 sin ()
+    return next("/dashboard"); // o "/championships"
+  }
+
+  next();
 });
 
 export default router;

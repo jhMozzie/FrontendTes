@@ -1,10 +1,12 @@
-import DashboardView from './views/DashboardView.vue';
+import type { RouteRecordRaw } from "vue-router";
+import DashboardView from "./views/DashboardView.vue";
 
-// Este archivo define las rutas específicas para el módulo del dashboard
-export default [
+const dashboardRoutes: RouteRecordRaw[] = [
   {
-    path: '/',
-    name: 'Dashboard',
+    path: "dashboard", // 👈 ruta relativa (irá dentro de MainLayout)
+    name: "Dashboard",
     component: DashboardView,
   },
 ];
+
+export default dashboardRoutes;
