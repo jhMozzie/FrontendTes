@@ -7,6 +7,7 @@ import { useAuthStore } from "@/modules/auth/store/authStore"; // 👈 importa t
 import MainLayout from "@/layouts/MainLayout.vue";
 
 // --- RUTAS ---
+import dashboardRoutes from "@/modules/dashboards/routes";
 import championshipRoutes from "@/modules/championships/routes";
 import academyRoutes from "@/modules/academies/routes";
 import studentRoutes from "@/modules/students/routes";
@@ -15,6 +16,7 @@ import authRoutes from "@/modules/auth/routes";
 
 // --- Hijos del MainLayout ---
 const mainLayoutChildren: RouteRecordRaw[] = [
+  ...dashboardRoutes,
   ...championshipRoutes.filter((route) => !route.path.startsWith("/")),
   ...academyRoutes,
   ...studentRoutes,

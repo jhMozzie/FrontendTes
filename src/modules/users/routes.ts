@@ -6,6 +6,7 @@ const userRoutes: RouteRecordRaw[] = [
     path: 'users',
     name: 'UsersList',
     component: UsersView,
+    meta: { roles: ['admin', 'usuario', 'coach'] }, // ✅ todos pueden ver lista
   }
 ];
 

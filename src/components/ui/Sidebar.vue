@@ -17,55 +17,16 @@
 
         <!-- Navegación Principal -->
         <ul class="space-y-2 font-medium">
-          <li>
+          <li v-for="(item, index) in filteredMenus" :key="index">
             <router-link
-              to="/dashboard"
+              :to="item.to"
               class="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-700 transition-colors"
             >
-              <HomeIcon class="w-5 h-5 text-gray-400 group-hover:text-white" />
-              <span>Dashboard</span>
-            </router-link>
-          </li>
-
-          <li>
-            <router-link
-              to="/championships"
-              class="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-700 transition-colors"
-            >
-              <TrophyIcon class="w-5 h-5 text-gray-400 group-hover:text-white" />
-              <span>Campeonatos</span>
-            </router-link>
-          </li>
-
-          <li>
-            <router-link
-              to="/academies"
-              class="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-700 transition-colors"
-            >
-              <BuildingLibraryIcon
+              <component
+                :is="item.icon"
                 class="w-5 h-5 text-gray-400 group-hover:text-white"
               />
-              <span>Academias</span>
-            </router-link>
-          </li>
-
-          <li>
-            <router-link
-              to="/students"
-              class="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-700 transition-colors"
-            >
-              <UsersIcon class="w-5 h-5 text-gray-400 group-hover:text-white" />
-              <span>Estudiantes</span>
-            </router-link>
-          </li>
-
-          <li>
-            <router-link
-              to="/users"
-              class="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-700 transition-colors"
-            >
-              <UserIcon class="w-5 h-5 text-gray-400 group-hover:text-white" />
-              <span>Usuarios</span>
+              <span>{{ item.label }}</span>
             </router-link>
           </li>
         </ul>
@@ -86,6 +47,7 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from "vue";
 import { useRouter } from "vue-router";
 import { useAuthStore } from "@/modules/auth/store/authStore";
 
@@ -106,8 +68,32 @@ defineProps({
 const router = useRouter();
 const auth = useAuthStore();
 
+interface MenuItem {
+  to: string;
+  label: string;
+  icon: any;
+  roles: string[];
+}
+
+// todos los menús posibles
+const menus: MenuItem[] = [
+  { to: "/dashboard", label: "Dashboard", icon: HomeIcon, roles: ["ADMIN", "COACH"] },
+  { to: "/championships", label: "Campeonatos", icon: TrophyIcon, roles: ["ADMIN", "COACH"] },
+  { to: "/academies", label: "Academias", icon: BuildingLibraryIcon, roles: ["ADMIN"] },
+  { to: "/students", label: "Estudiantes", icon: UsersIcon, roles: ["ADMIN", "COACH"] },
+  { to: "/users", label: "Usuarios", icon: UserIcon, roles: ["ADMIN"] },
+];
+
+// ✅ filtra según el rol actual
+const filteredMenus = computed(() => {
+  const role = (auth.user?.role || "").toUpperCase(); // 👈 normalizamos a MAYÚSCULAS
+  return menus.filter((item) =>
+    item.roles.map((r) => r.toUpperCase()).includes(role)
+  );
+});
+
 const onLogout = () => {
-  auth.logout(); // limpia token + usuario
-  router.push("/login"); // redirige al login
+  auth.logout();
+  router.push("/login");
 };
 </script>
